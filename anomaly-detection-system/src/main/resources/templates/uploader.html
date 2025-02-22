@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        input[type="file"] {
+            display: none; 
+        }
+        .custom-button {
+            background: #284ca7;
+            color: white;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            font-size: 14px;
+        }
+        .custom-button:hover {
+            background: #241688;
+        }
+        #message {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        button {
+    background: #284ca7;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    }   
+    button:hover {
+        background: #241688;
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Upload the anomaly file</h2>
+        <button class="custom-button" onclick="document.getElementById('fileInput').click()">Choose File</button>
+        <input type="file" id="fileInput">
+        <button onclick="uploadFile()">Upload</button>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            const message = document.getElementById('message');
+            
+            if (fileInput.files.length === 0) {
+                message.textContent = "Please select a file.";
+                message.style.color = "red";
+                return;
+            }
+            
+
+
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            fetch("/upload-file", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                message.textContent = "File uploaded successfully!";
+                message.style.color = "green";
+            })
+            .catch(error => {
+                message.textContent = "Upload failed.";
+                message.style.color = "red";
+            });
+        }
+    </script>
+</body>
+</html>
